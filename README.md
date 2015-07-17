@@ -14,3 +14,33 @@ https://github.com/oa414/objc-zen-book-cn/
 这本书的理念是是代码的清晰性优先于性能，同时提供为什么这么做的原因。
 
 虽然所有的代码都是 Objective-C 写的，但是一些主题是通用的并且独立于编程语言的。
+
+##  作者
+
+**Luca Bernardi**
+
+- http://lucabernardi.com
+- @luka_bernardi
+- http://github.com/lukabernardi
+
+**Alberto De Bortoli**
+
+- http://albertodebortoli.com
+- @albertodebo
+- http://github.com/albertodebortoli
+
+## 关于中文翻译
+
+译者
+
+**林翔宇**
+- http://linxiangyu.org
+- linxiangyu@nupter.org
+- http://github.com/oa414
+
+**庞博**
+- bopang@sohu-inc.com
+- https://github.com/heistings
+
+
+翻译已得到原作者许可，并且会在更加完善后申请合并到原文仓库。
