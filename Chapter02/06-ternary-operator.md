@@ -5,23 +5,23 @@
 
 
 **推荐:**
-```objective-c
+```obj-c
 result = a > b ? x : y;
 ```
 
 **不推荐:**
-```objective-c
+```obj-c
 result = a > b ? x = c > d ? c : d : y;
 ```
 
 当三元运算符的第二个参数（if 分支）返回和条件语句中已经检查的对象一样的对象的时候，下面的表达方式更灵巧：
 
 **推荐:**
-```objective-c
+```obj-c
 result = object ? : [self createObject];
 ```
 
 **不推荐:**
-```objective-c
+```obj-c
 result = object ? object : [self createObject];
 ```

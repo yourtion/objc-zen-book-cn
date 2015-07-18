@@ -7,11 +7,11 @@
 （译者注：名字起源于星球大战中尤达大师的讲话方式，总是用倒装的语序）
 
 **推荐:**
-```objective-c
+```obj-c
 if ([myValue isEqual:@42]) { ...
 ```
 
 **不推荐:**
-```objective-c
+```obj-c
 if ([@42 isEqual:myValue]) { ...
 ```

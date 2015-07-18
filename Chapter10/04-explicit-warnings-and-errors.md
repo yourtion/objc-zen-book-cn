@@ -4,7 +4,7 @@
 编译器是一个机器人，它会标记你代码中被 Clang 规则定义为错误的地方。但是，你总是比 Clang 更聪明。通常，你会发现一些讨厌的代码 会导致这个问题，而且不论怎么做，你都解决不了。你可以这样明确一个错误：
 
 
-```objective-c
+```obj-c
 - (NSInteger)divide:(NSInteger)dividend by:(NSInteger)divisor
 {
     #error Whoa, buddy, you need to check for zero here!
@@ -16,7 +16,7 @@
 类似的，你可以这样标明一个 警告
 
 
-```objective-c
+```obj-c
 - (float)divide:(float)dividend by:(float)divisor
 {
     #warning Dude, don't compare floating point numbers like this!

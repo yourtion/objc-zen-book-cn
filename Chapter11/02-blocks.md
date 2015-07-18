@@ -4,7 +4,7 @@ Blocks 是 Objective-C 版本的 lambda 或者 closure（闭包）。
 
 使用 block 定义异步接口:
 
-```objective-c
+```obj-c
 - (void)downloadObjectsAtPath:(NSString *)path
                    completion:(void(^)(NSArray *objects, NSError *error))completion;
 ```
@@ -27,7 +27,7 @@ Blocks 是 Objective-C 版本的 lambda 或者 closure（闭包）。
 因为调用者更关心的是实际的数据，就像这样：
 
 
-```objective-c
+```obj-c
 - (void)downloadObjectsAtPath:(NSString *)path
                    completion:(void(^)(NSArray *objects, NSError *error))completion {
     if (objects) {
@@ -82,7 +82,7 @@ block 在 Objective-C 里面被当作一等公民对待：他们有一个 `isa` 
 
 **例子:**
 
-```objective-c
+```obj-c
 __weak __typeof(self) weakSelf = self;
 [self executeBlock:^(NSData *data, NSError *error) {
     [weakSelf doSomethingWithData:data];
@@ -91,7 +91,7 @@ __weak __typeof(self) weakSelf = self;
 
 **不要这样做:**
 
-```objective-c
+```obj-c
 [self executeBlock:^(NSData *data, NSError *error) {
     [self doSomethingWithData:data];
 }];
@@ -99,7 +99,7 @@ __weak __typeof(self) weakSelf = self;
 
 **多个语句的例子:**
 
-```objective-c
+```obj-c
 __weak __typeof(self)weakSelf = self;
 [self executeBlock:^(NSData *data, NSError *error) {
     __strong __typeof(weakSelf) strongSelf = weakSelf;
@@ -112,7 +112,7 @@ __weak __typeof(self)weakSelf = self;
 
 **不要这样做:**
 
-```objective-c
+```obj-c
 __weak __typeof(self)weakSelf = self;
 [self executeBlock:^(NSData *data, NSError *error) {
     [weakSelf doSomethingWithData:data];
@@ -123,7 +123,7 @@ __weak __typeof(self)weakSelf = self;
 
 你应该把这两行代码作为 snippet 加到 Xcode 里面并且总是这样使用它们。
 
-```objective-c
+```obj-c
 __weak __typeof(self)weakSelf = self;
 __strong __typeof(weakSelf)strongSelf = weakSelf;
 ```
@@ -139,7 +139,7 @@ __strong __typeof(weakSelf)strongSelf = weakSelf;
 
 如果我们直接在 block 里面用 self 关键字，对象会在 block 的定义时候被 retain，（实际上 block 是 [copied][blocks_caveat13]  但是为了简单我们可以忽略这个）。一个 const 的对 self 的引用在 block 里面有自己的位置并且它会影响对象的引用计数。如果 block 被其他 class 或者/并且传送过去了，我们可能想要 retain  self 就像其他被 block 使用的对象，从他们需要被block执行
 
-```objective-c
+```obj-c
 dispatch_block_t completionBlock = ^{
     NSLog(@"%@", self);
 }
@@ -153,7 +153,7 @@ MyViewController *myController = [[MyViewController alloc] init...];
 
 不是很麻烦的事情。但是, 当 block 被 self 在一个属性 retain（就像下面的例子）呢
 
-```objective-c
+```obj-c
 self.completionHandler = ^{
     NSLog(@"%@", self);
 }
@@ -167,7 +167,7 @@ MyViewController *myController = [[MyViewController alloc] init...];
 
 这就是有名的 retain cycle, 并且我们通常应该避免它。这种情况下我们收到 CLANG 的警告：
 
-```objective-c 
+```obj-c 
 Capturing 'self' strongly in this block is likely to lead to a retain cycle （在 block 里面发现了 `self` 的强引用，可能会导致循环引用）
 ```
 所以可以用 `weak` 修饰
@@ -177,7 +177,7 @@ Capturing 'self' strongly in this block is likely to lead to a retain cycle （�
 
 这样会避免循环引用，也是我们通常在 block 已经被 self 的 property 属性里面 retain 的时候会做的。
 
-```objective-c
+```obj-c
 __weak typeof(self) weakSelf = self;
 self.completionHandler = ^{
     NSLog(@"%@", weakSelf);
@@ -202,7 +202,7 @@ MyViewController *myController = [[MyViewController alloc] init...];
 
 [Apple 文档][blocks_caveat1] 中表示 "为了 non-trivial cycles ，你应该这样" ：
 
-```objective-c
+```obj-c
 MyViewController *myController = [[MyViewController alloc] init...];
 // ...
 MyViewController * __weak weakMyController = myController;
@@ -243,7 +243,7 @@ myController.completionHandler =  ^(NSInteger result) {
 
 block 的执行可以抢占，并且后来的对 weakSelf 的不同调用可以导致不同的值(比如，在 一个特定的执行 weakSelf 可能赋值为 nil )
 
-```objective-c
+```obj-c
 __weak typeof(self) weakSelf = self;
 dispatch_block_t block =  ^{
     [weakSelf doSomething]; // weakSelf != nil
@@ -256,7 +256,7 @@ dispatch_block_t block =  ^{
 
 不论管 block 是否被 retain 或者是一个属性，这样也不会有循环引用。如果 block 被传递到其他对象并且被复制了，执行的时候，weakSelf 可能被nil，因为强引用被复制并且不会变成nil的时候，我们确保对象 在 block 调用的完整周期里面被 retain了，如果抢占发生了，随后的对 strongSelf 的执行会继续并且会产生一样的值。如果 strongSelf 的执行到 nil，那么在 block 不能正确执行前已经返回了。
 
-```objective-c
+```obj-c
 __weak typeof(self) weakSelf = self;
 myObj.myBlock =  ^{
     __strong typeof(self) strongSelf = weakSelf;
@@ -274,13 +274,13 @@ myObj.myBlock =  ^{
  
 在一个 ARC 的环境中，如果尝试用 `->`符号来表示，编译器会警告一个错误：
 
-```objective-c
+```obj-c
 Dereferencing a __weak pointer is not allowed due to possible null value caused by race condition, assign it to a strong variable first. (对一个 __weak 指针的解引用不允许的，因为可能在竞态条件里面变成 null, 所以先把他定义成 strong 的属性)
 ```
 
 可以用下面的代码展示
 
-```objective-c
+```obj-c
 __weak typeof(self) weakSelf = self;
 myObj.myBlock =  ^{
     id localVal = weakSelf->someIVar;

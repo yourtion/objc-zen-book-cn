@@ -4,7 +4,7 @@
 
 **例子：**
 
-```objective-c
+```obj-c
 NSArray *names = @[@"Brian", @"Matt", @"Chris", @"Alex", @"Steve", @"Paul"];
 NSDictionary *productManagers = @{@"iPhone" : @"Kate", @"iPad" : @"Kamal", @"Mobile Web" : @"Bill"};
 NSNumber *shouldUseLiterals = @YES;
@@ -13,7 +13,7 @@ NSNumber *buildingZIPCode = @10018;
 
 **不要这样做:**
 
-```objective-c
+```obj-c
 NSArray *names = [NSArray arrayWithObjects:@"Brian", @"Matt", @"Chris", @"Alex", @"Steve", @"Paul", nil];
 NSDictionary *productManagers = [NSDictionary dictionaryWithObjectsAndKeys: @"Kate", @"iPhone", @"Kamal", @"iPad", @"Bill", @"Mobile Web", nil];
 NSNumber *shouldUseLiterals = [NSNumber numberWithBool:YES];
@@ -26,7 +26,7 @@ NSNumber *buildingZIPCode = [NSNumber numberWithInteger:10018];
 
 下面的例子 **应该被避免**:
 
-```objective-c
+```obj-c
 NSMutableArray *aMutableArray = [@[] mutableCopy];
 ```
 

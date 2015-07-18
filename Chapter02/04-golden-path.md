@@ -4,7 +4,7 @@
 
 **推荐:**
 
-```objective-c
+```obj-c
 - (void)someMethod {
   if (![someOther boolValue]) {
       return;
@@ -16,7 +16,7 @@
 
 **不推荐:**
 
-```objective-c
+```obj-c
 - (void)someMethod {
   if ([someOther boolValue]) {
     //Do something important

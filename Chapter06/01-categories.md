@@ -12,7 +12,7 @@
 
 ** 例子 **
 
-```objective-c
+```obj-c
 @interface NSDate (ZOCTimeExtensions)
 - (NSString *)zoc_timeAgoShort;
 @end
@@ -20,7 +20,7 @@
 
 ** 不要这样做 **
 
-```objective-c
+```obj-c
 @interface NSDate (ZOCTimeExtensions)
 - (NSString *)timeAgoShort;
 @end
@@ -34,7 +34,7 @@
 之前创造的方法分组可以用来更好地进行不同功能的表示，并且把类打破在更多自我包含的组成部分里。
 
  
-```objective-c
+```obj-c
 
 @interface NSDate : NSObject <NSCopying, NSSecureCoding>
 

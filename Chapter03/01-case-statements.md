@@ -3,7 +3,7 @@
 除非编译器强制要求，括号在 case 语句里面是不必要的。但是当一个 case 包含了多行语句的时候，需要加上括号。
 
 
-```objective-c
+```obj-c
 switch (condition) {
     case 1:
         // ...
@@ -25,7 +25,7 @@ switch (condition) {
 
 有时候可以使用 fall-through 在不同的 case 里面执行一样的代码。一个 fall-through  是指移除 case 语句的 “break” 然后让下面的 case 继续执行。
 
-```objective-c
+```obj-c
 switch (condition) {
     case 1:
     case 2:
@@ -40,7 +40,7 @@ switch (condition) {
 
 当在 switch 语句里面使用一个可枚举的变量的时候，`default` 是不必要的。比如：
 
-```objective-c
+```obj-c
 switch (menuType) {
     case ZOCEnumNone:
         // ...
@@ -66,7 +66,7 @@ switch (menuType) {
 
 *例子: **
 
-```objective-c
+```obj-c
 typedef NS_ENUM(NSUInteger, ZOCMachineState) {
     ZOCMachineStateNone,
     ZOCMachineStateIdle,

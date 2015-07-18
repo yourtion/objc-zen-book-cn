@@ -10,7 +10,7 @@
 
 **例子: **
 
-```objective-c
+```obj-c
 /**
  *  Designated initializer.
  *

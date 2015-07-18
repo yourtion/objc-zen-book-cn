@@ -6,7 +6,7 @@
 `init` 方法应该是这样的结构：
 
 
-```objective-c
+```obj-c
 - (instancetype)init
 {
     self = [super init]; // call the designated initializer
@@ -41,7 +41,7 @@
 Objective-C 有 designated 和 secondary 初始化方法的观念。
 designated 初始化方法是提供所有的参数，secondary 初始化方法是一个或多个，并且提供一个或者更多的默认参数来调用 designated 初始化方法的初始化方法。
 
-```objective-c
+```obj-c
 @implementation ZOCEvent
 
 - (instancetype)initWithTitle:(NSString *)title
@@ -98,7 +98,7 @@ designated 初始化方法是提供所有的参数，secondary 初始化方法�
 你一个典型的例子是你创造`UIViewController`子类的时候重载
 `initWithNibName:bundle:`方法。
 
-```objective-c
+```obj-c
 @implementation ZOCViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -129,7 +129,7 @@ In case you want to provide your own designated initializer there are three step
 很多开发者忽略了后两步，这不仅仅是一个粗心的问题，而且这样违反了框架的规则，而且可能导致不确定的行为和bug。
 让我们看看正确的实现的例子：
 
-```objective-c
+```obj-c
 @implementation ZOCNewsViewController
 
 - (id)initWithNews:(ZOCNews *)news
@@ -166,7 +166,7 @@ Even though it should be possible to infer what method is the designate initiali
 
 这是之前的例子相关的实现的头文件(这里使用宏来让代码没有那么啰嗦)
 
-```objective-c
+```obj-c
 
 @interface ZOCNewsViewController : UIViewController
 
@@ -230,7 +230,7 @@ This imply that in your designated initializer you should always call another se
 
 一个相关的返回类型可以明确地规定用 `instancetype` 关键字作为返回类型，并且它可以在一些工厂方法或者构造器方法的场景下很有用。它可以提示编译器正确地检查类型，并且更加重要的是，这同时适用于它的子类。
 
-```objective-c
+```obj-c
 @interface ZOCPerson
 + (instancetype)personWithName:(NSString *)name;
 @end
@@ -294,7 +294,7 @@ A typical example of this is when you have the same UIViewController subclass fo
 通用的 view controller  会检查当前设备并且返回适当的子类。
 
 
-```objective-c
+```obj-c
 @implementation ZOCKintsugiPhotoViewController
 
 - (id)initWithPhotos:(NSArray *)photos
@@ -330,7 +330,7 @@ Let's assume that we are running this code on an iPhone and that `ZOCKintsugiPho
 然而，如果一定要用，请使用一个线程安全的模式来创建共享的实例。 对于GCD，用 `dispatch_once()` 函数就可以咯。
 
 
-```objective-c
+```obj-c
 + (instancetype)sharedInstance
 {
    static id sharedInstance = nil;
@@ -346,7 +346,7 @@ Let's assume that we are running this code on an iPhone and that `ZOCKintsugiPho
 使用dispatch_once()，来控制代码同步，取代了原来老的约定俗成的用法。
 
 
-```objective-c
+```obj-c
 + (instancetype)sharedInstance
 {
     static id sharedInstance;

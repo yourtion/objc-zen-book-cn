@@ -6,7 +6,7 @@
 
 同时，用一个 Did/Will 这样的动词以及用 "Notifications" 后缀来命名这个通知也是一个好的实践。 
 
-```objective-c
+```obj-c
 // Foo.h
 extern NSString * const ZOCFooDidBecomeBarNotification
 

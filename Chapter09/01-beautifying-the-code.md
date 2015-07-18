@@ -7,7 +7,7 @@
 
 **推荐:**
 
-```objective-c
+```obj-c
 if (user.isHappy) {
     //Do something
 }
@@ -18,7 +18,7 @@ else {
 
 **不推荐:**
 
-```objective-c
+```obj-c
 if (user.isHappy)
 {
   //Do something
@@ -38,7 +38,7 @@ if (user.isHappy)
 
 **推荐:**
 
-```objective-c
+```obj-c
 [UIView animateWithDuration:1.0
                  animations:^{
                      // something
@@ -52,7 +52,7 @@ if (user.isHappy)
 
 **不推荐:**
 
-```objective-c
+```obj-c
 [UIView animateWithDuration:1.0 animations:^{
     // something 
 } completion:^(BOOL finished) {
@@ -68,13 +68,13 @@ if (user.isHappy)
 
 举个例子：
 
-```objective-c
+```obj-c
 self.productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
 ```
 
 一个像上面的长行的代码在第二行以一个间隔（2个空格）延续
 
-```objective-c
+```obj-c
 self.productsRequest = [[SKProductsRequest alloc] 
   initWithProductIdentifiers:productIdentifiers];
 ```

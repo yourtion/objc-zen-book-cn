@@ -4,7 +4,7 @@
 
 这个约定是因为当被存储在集合（如 `NSDictionary` 和 `NSSet` 在底层使用 hash 表数据的数据结构）的时候，如何查找这些对象。
 
-```objective-c
+```obj-c
 @implementation ZOCPerson
 
 - (BOOL)isEqual:(id)object {
@@ -38,7 +38,7 @@
 一个完整的 isEqual* 方法应该是这样的：
 
 
-```objective-c
+```obj-c
 - (BOOL)isEqual:(id)object {
     if (self == object) {
       return YES;

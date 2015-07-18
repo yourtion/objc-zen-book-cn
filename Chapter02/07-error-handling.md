@@ -3,7 +3,7 @@
 当方法返回一个错误参数的引用的时候，检查返回值，而不是错误的变量。
 
 **推荐:**
-```objective-c
+```obj-c
 NSError *error = nil;
 if (![self trySomethingWithError:&error]) {
     // Handle Error

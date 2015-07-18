@@ -9,7 +9,7 @@
 - protocols 的实现
 - 对父类方法的重写
 
-```objective-c
+```obj-c
 
 - (void)dealloc { /* ... */ }
 - (instancetype)init { /* ... */ }
@@ -65,7 +65,7 @@
 
 如果你知道你的代码不会导致内存泄露，你可以通过加入这些代码忽略这些警告
 
-```objective-c
+```obj-c
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
@@ -84,7 +84,7 @@
 
 这对表明你一个定义但是没有使用的变量很有用。大多数情况下，你希望移除这些引用来（稍微地）提高性能，但是有时候你希望保留它们。为什么？或许它们以后有用，或者有些特性只是暂时移除。无论如何，一个消除这些警告的好方法是用相关语句进行注解，使用 `#pragma unused()`:
 
-```objective-c
+```obj-c
 - (void)giveMeFive
 {
     NSString *foo;

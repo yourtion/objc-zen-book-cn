@@ -25,7 +25,7 @@ A minimal step forward would be to follow the Single Responsibility Principle an
 
 这些类的接口可以是这样的：
 
-```objective-c
+```obj-c
 
 @interface ZOCFeedParser : NSObject
 
@@ -41,7 +41,7 @@ A minimal step forward would be to follow the Single Responsibility Principle an
 
 ```
 
-```objective-c
+```obj-c
 
 @interface ZOCTableViewController : UITableViewController
 
@@ -55,7 +55,7 @@ A minimal step forward would be to follow the Single Responsibility Principle an
 `ZOCFeedParser` 用一个 `NSURL` 来初始化来获取 RSS 订阅（在这之下可能会使用 NSXMLParser 和 NSXMLParserDelegate 创建有意义的数据），`ZOCTableViewController` 会用这个 parser 来进行初始化。 我们希望它显示 parser 接受到的指并且我们用下面的 protocol 实现委托：
 
 
-```objective-c
+```obj-c
 
 @protocol ZOCFeedParserDelegate <NSObject>
 @optional
@@ -71,14 +71,14 @@ A minimal step forward would be to follow the Single Responsibility Principle an
 
 用合适的 protocol 来来处理 RSS 非常完美。view controller 会遵从它的公开的接口：
 
-```objective-c
+```obj-c
 @interface ZOCTableViewController : UITableViewController <ZOCFeedParserDelegate>
 ```
 
 
 最后创建的代码是这样子的：
 
-```objective-c
+```obj-c
 NSURL *feedURL = [NSURL URLWithString:@"http://bbc.co.uk/feed.rss"];
 
 ZOCFeedParser *feedParser = [[ZOCFeedParser alloc] initWithURL:feedURL];
@@ -97,7 +97,7 @@ We modify our feed parser introducing the `ZOCFeedParserProtocol` protocol (in t
 
 我们使用  `ZOCFeedParserProtocol` 这个 protocol (在 ZOCFeedParserProtocol.h 文件里面，同时文件里也有 `ZOCFeedParserDelegate` )
 
-```objective-c
+```obj-c
 
 @protocol ZOCFeedParserProtocol <NSObject>
 
@@ -123,7 +123,7 @@ We modify our feed parser introducing the `ZOCFeedParserProtocol` protocol (in t
 
 注意这个代理 protocol 现在处理响应我们新的 protocol 而且 ZOCFeedParser 的接口文件更加精炼了：
 
-```objective-c
+```obj-c
 
 @interface ZOCFeedParser : NSObject <ZOCFeedParserProtocol>
 
@@ -138,7 +138,7 @@ We modify our feed parser introducing the `ZOCFeedParserProtocol` protocol (in t
 从这点来看 view controller  可以接受任何实现这个新的  protocol 的对象，确保所有的对象会响应从 `start` 和 `stop` 的方法，而且它会通过 delegate 的属性来提供信息。所有的 view controller  只需要知道相关对象并且不需要知道实现的细节。
 
 
-```objective-c
+```obj-c
 
 @interface ZOCTableViewController : UITableViewController <ZOCFeedParserDelegate>
 

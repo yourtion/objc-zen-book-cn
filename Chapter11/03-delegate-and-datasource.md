@@ -9,14 +9,14 @@
 
 一些有 void 返回类型的方法就像回调
 
-```objective-c
+```obj-c
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath;
 ```
 
 但是其他的不是
 
-```objective-c
+```obj-c
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender;
 ```
@@ -25,7 +25,7 @@
 
 可能有人会说 Apple 有一个 [UITableViewDataSouce](https://developer.apple.com/library/ios/documentation/uikit/reference/UITableViewDataSource_Protocol/Reference/Reference.html)  protocol 来做这个（虽然使用委托模式的名字），但是实际上它的方法是用来提供真实的数据应该如何被展示的信息的。
 
-```objective-c
+```obj-c
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 ```
@@ -40,7 +40,7 @@
 
 这个是实际的例子：
 
-```objective-c
+```obj-c
 @class ZOCSignUpViewController;
 
 @protocol ZOCSignUpViewControllerDelegate <NSObject>
@@ -66,14 +66,14 @@
 在上面的例子里面，委托方法需要总是有一个调用方作为第一个参数，否则委托对象可能被不能区别不同的委托者的实例。此外，如果调用者没有被传递到委托对象，那么就没有办法让一个委托对象处理两个不同的委托者了。所以，下面这样的方法就是人神共愤的：
 
 
-```objective-c
+```obj-c
 - (void)calculatorDidCalculateValue:(CGFloat)value;
 ```
 
 默认情况下，委托对象需要实现 protocol 的方法。可以用`@required` 和  `@optional` 关键字来标记方法是否是必要的还是可选的。
 
 
-```objective-c
+```obj-c
 @protocol ZOCSignUpViewControllerDelegate <NSObject>
 @required
 - (void)signUpViewController:(ZOCSignUpViewController *)controller didProvideSignUpInfo:(NSDictionary *);
@@ -84,7 +84,7 @@
 
 对于可选的方法，委托者必须在发送消息前检查委托是否确实实现了特定的方法（否则会Crash）：
 
-```objective-c
+```obj-c
 if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSignUpButton:)]) {
     [self.delegate signUpViewControllerDidPressSignUpButton:self];
 }
@@ -103,7 +103,7 @@ if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSign
 
 你可能会想要提供一个和 `UIViewControllerB` 不同的实现。一个实现可能是这样子的：
 
-```objective-c
+```obj-c
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat retVal = 0;
@@ -120,7 +120,7 @@ if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSign
 
 调用过程
 
-```objective-c
+```obj-c
 [super respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]
 ```
 
@@ -132,7 +132,7 @@ if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSign
 
 这种情况下我们需要来询问特定的类实例是否可以响应对应的 selector。下面的代码提供了一个小技巧：
 
-```objective-c
+```obj-c
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat retVal = 0;
@@ -163,7 +163,7 @@ if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSign
 
 一个基本的实现在下面给出。Cocoa 在数据结构中使用弱引用来避免引用循环，我们使用一个类来作为委托者持有委托对象的弱引用。
 
-```objective-c
+```obj-c
 @interface ZOCWeakObject : NSObject
 
 @property (nonatomic, weak, readonly) id object;
@@ -174,7 +174,7 @@ if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSign
 @end
 ```
 
-```objective-c
+```obj-c
 @interface ZOCWeakObject ()
 @property (nonatomic, weak) id object;
 @end
@@ -223,7 +223,7 @@ if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSign
 
 一个简单的使用 weak 对象来完成多重引用的组成部分：
 
-```objective-c
+```obj-c
 @protocol ZOCServiceDelegate <NSObject>
 @optional
 - (void)generalService:(ZOCGeneralService *)service didRetrieveEntries:(NSArray *)entries;
@@ -239,7 +239,7 @@ if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSign
 @end
 ```
 -------------------
-```objective-c
+```obj-c
 @implementation ZOCGeneralService
 - (void)registerDelegate:(id<ZOCServiceDelegate>)delegate {
     if ([delegate conformsToProtocol:@protocol(ZOCServiceDelegate)]) {

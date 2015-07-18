@@ -5,19 +5,19 @@ On a similar note of the Yoda conditions, also the nil check has been at the cen
 【疑问】
 类似于 Yoda 表达式，nil 检查的方式也是存在争议的。一些 notous 库 像这样检查对象是否为 nil：
 
-```objective-c
+```obj-c
 if (nil == myValue) { ...
 ```
 
 或许有人会提出这是错的，因为在 nil 作为一个常量的情况下，这样做就像 Yoda 表达式了。 但是一些程序员这么做的原因是为了避免调试的困难，看下面的代码：
 
-```objective-c
+```obj-c
 if (myValue == nil) { ...
 ```
 
 如果程序员敲错成这样：
 
-```objective-c
+```obj-c
 if (myValue = nil) { ...
 ```
 
@@ -27,14 +27,14 @@ if (myValue = nil) { ...
 为了避免这些奇怪的问题，途径是使用感叹号来判断。因为 nil 是 解释到 NO 所以没必要在条件语句里面把它和其他值比较。同时，不要直接把它和 `YES` 比较，因为 `YES` 的定义是 1 而 `BOOL` 是 8 位的，实际上是 char 类型。
 
 **推荐:**
-```objective-c
+```obj-c
 if (someObject) { ...
 if (![someObject boolValue]) { ...
 if (!someObject) { ...
 ```
 
 **不推荐:**
-```objective-c
+```obj-c
 if (someObject == YES) { ... // Wrong
 if (myRawValue == YES) { ... // Never do this.
 if ([someObject boolValue] == NO) { ...

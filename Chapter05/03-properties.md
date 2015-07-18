@@ -3,12 +3,12 @@
 属性应该尽可能描述性地命名，避免缩写，并且是小写字母开头的驼峰命名。我们的工具可以很方便地帮我们自动补全所有东西（嗯。。几乎所有的，Xcode 的Derived Data 会索引这些命名）。所以没理由少打几个字符了，并且最好尽可能在你源码里表达更多东西。
 
 **例子 :**
-```objective-c
+```obj-c
 NSString *text;
 ```
 
 **不要这样 :**
-```objective-c
+```obj-c
 NSString* text;
 NSString * text;
 ```
@@ -61,13 +61,13 @@ The same applies for the `dealloc` method (during the `dealloc` method an object
 当使用 setter getter 方法的时候尽量使用点符号。应该总是用点符号来访问以及设置属性
 
 **例子:**
-```objective-c
+```obj-c
 view.backgroundColor = [UIColor orangeColor];
 [UIApplication sharedApplication].delegate;
 ```
 
 **不要这样:**
-```objective-c
+```obj-c
 [view setBackgroundColor:[UIColor orangeColor]];
 UIApplication.sharedApplication.delegate;
 ```
@@ -79,7 +79,7 @@ UIApplication.sharedApplication.delegate;
 
 推荐按照下面的格式来定义属性
 
-```objective-c
+```obj-c
 @property (nonatomic, readwrite, copy) NSString *name;
 ```
 
@@ -92,7 +92,7 @@ UIApplication.sharedApplication.delegate;
 
 为了完成一个共有的 getter 和一个私有的 setter，你应该声明公开的属性为 `readonly`  并且在类扩展总重新定义通用的属性为 `readwrite` 的。
 
-```objective-c
+```obj-c
 @interface MyClass : NSObject
 @property (nonatomic, readonly) NSObject *object
 @end
@@ -104,7 +104,7 @@ UIApplication.sharedApplication.delegate;
 
 如果 `BOOL` 属性的名字是描述性的，这个属性可以省略 "is" ，但是特定要在 get 访问器中指定名字，如：
 
-```objective-c
+```obj-c
 @property (assign, getter=isEditable) BOOL editable;
 ```
 
@@ -119,7 +119,7 @@ UIApplication.sharedApplication.delegate;
 
 **例子:**
 
-```objective-c
+```obj-c
 @interface ZOCViewController ()
 @property (nonatomic, strong) UIView *bannerView;
 @end
@@ -139,7 +139,7 @@ This is done in order to ensure the encapsulation and prevent that the value is 
 
 你应该同时避免暴露在公开的接口中可变的对象，因为这允许你的类的使用者改变你自己的内部表示并且破坏了封装。你可以提供可以只读的属性来返回你对象的不可变的副本。
 
-```objective-c
+```obj-c
 /* .h */
 @property (nonatomic, readonly) NSArray *elements
 
@@ -158,7 +158,7 @@ This is done in order to ensure the encapsulation and prevent that the value is 
 在这个情况下，我们可以选择使用重载属性的　getter　方法来做　lazy　实例化。通常这种操作的模板像这样：
 
 
-```objective-c
+```obj-c
 - (NSDateFormatter *)dateFormatter {
   if (!_dateFormatter) {
     _dateFormatter = [[NSDateFormatter alloc] init];

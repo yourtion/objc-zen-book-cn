@@ -6,11 +6,11 @@
 
 **推荐:**
 
-```objective-c
+```obj-c
 UIButton *settingsButton;
 ```
 
 **不推荐:**
-```objective-c
+```obj-c
 UIButton *setBut;
 ```

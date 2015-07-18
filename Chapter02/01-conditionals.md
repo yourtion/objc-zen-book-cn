@@ -4,7 +4,7 @@
 
 **推荐:**
 
-```objective-c
+```obj-c
 if (!error) {
     return success;
 }
@@ -12,14 +12,14 @@ if (!error) {
 
 **不推荐:**
 
-```objective-c
+```obj-c
 if (!error)
     return success;
 ```
 
 或者
 
-```objective-c
+```obj-c
 if (!error) return success;
 ```
 
@@ -29,7 +29,7 @@ if (!error) return success;
 代码在这里：
 
 
-```objective-c
+```obj-c
 static OSStatus
 SSLVerifySignedServerKeyExchange(SSLContext *ctx, bool isRsa, SSLBuffer signedParams,
                                  uint8_t *signature, UInt16 signatureLen)
