@@ -52,3 +52,5 @@ https://github.com/oa414/objc-zen-book-cn/
 **Yourtion**
 - yourtion@gmail.com
 - https://github.com/yourtion
+
+**根据电子书做了部分章节的排版优化，支持Objective-C语法高亮。如有修改建议优化，请直接Fork：<https://github.com/yourtion/objc-zen-book-cn/> 进行修改并申请 Pull Request。**
