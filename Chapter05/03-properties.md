@@ -40,10 +40,6 @@ NSString * text;
 
 #### Init 和 Dealloc
 
-There is however an exception to what stated before: you must never use the setter (or the getter) in the `init` (and other initializer method), and instead you should always access directly the variable using the instance variable. This is to be defensive against subclassing: eventually a subclass can override the setter (or getter) and trying to call other methods, access properties or iVars that aren't in a consistent state or fully-initialized. Remember that an object is considered fully initialized and in a consistent state only after the init returns. 
-
-The same applies for the `dealloc` method (during the `dealloc` method an object can be in a inconsistent state). This is also clearly stated many times over time:
-
 有一个例外：你永远不能在 init （以及其他初始化函数）里面用 getter 和 setter 方法，并且你直接访问实例变量。事实上一个子类可以重载sette或者getter并且尝试调用其他方法，访问属性的或者 ivar 的话，他们可能没有完全初始化。记住一个对象是仅仅在 init 返回的时候，才会被认为是初始化完成到一个状态了。
 
 同样在 dealloc 方法中（在 dealloc 方法中，一个对象可以在一个 不确定的状态中）这是同样需要被注意的。
@@ -127,10 +123,6 @@ UIApplication.sharedApplication.delegate;
 
 ### 可变对象
 
-Any property that potentially can be set with a mutable object (e.g. `NSString`,`NSArray`,`NSURLRequest`) must have the memory-management type to `copy`. 
-
-This is done in order to ensure the encapsulation and prevent that the value is changed after the property is set without that the object know it.
-
 【疑问】
 
 任何可以用来用一个可变的对象设置的（(比如 `NSString`,`NSArray`,`NSURLRequest`)）属性的的内存管理类型必须是 `copy` 的。
@@ -172,9 +164,6 @@ This is done in order to ensure the encapsulation and prevent that the value is 
 
 
 即使在一些情况下这是有益的，但是我们仍然建议你在决定这样做之前经过深思熟虑，事实上这样是可以避免的。下面是使用　延迟实例化的争议。
-
-
-
 
 * getter　方法不应该有副作用。在使用 getter 方法的时候你不要想着它可能会创建一个对象或者导致副作用，事实上，如果调用 getter 方法的时候没有涉及返回的对象，编译器就会放出警告：getter 不应该产生副作用
 * 你在第一次访问的时候改变了初始化的消耗，产生了副作用，这回让优化性能变得困难（以及测试）

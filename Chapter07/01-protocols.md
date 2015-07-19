@@ -1,4 +1,3 @@
-
 #  Protocols
 
 在 Objective-C 的世界里面经常错过的一个东西是抽象接口。接口（interface）这个词通常指一个类的 `.h` 文件，但是它在 Java 程序员眼里有另外的含义： 一系列不依赖具体实现的方法的定义。
@@ -14,8 +13,6 @@
 要求很简单明了：把一个远程的 RSS 订阅展示在一个 tableview 中。
 
 一个幼稚的方法是创建一个 `UITableViewController` 的子类，并且把所有的检索订阅数据，解析以及展示的逻辑放在一起，或者说是一个 MVC (Massive View Controller)。这可以跑起来，但是它的设计非常糟糕，不过它足够过一些要求不高的面试了。
-
-A minimal step forward would be to follow the Single Responsibility Principle and create at least 2 components to do the different tasks:
 
 最小的步骤是遵从单一功能原则，创建至少两个组成部分来完成这个任务：
 
@@ -91,9 +88,6 @@ feedParser.delegate = tableViewController;
 
 
 view controller 的职责应该是“从<someone>上显示一些内容”，但是如果我们只允许传递`ZOCFeedParser`的话就不是这样的了。这就表现了需要传递给 View controller 一个更泛型的对象的需求。
-
-
-We modify our feed parser introducing the `ZOCFeedParserProtocol` protocol (in the ZOCFeedParserProtocol.h file where also `ZOCFeedParserDelegate` will be).
 
 我们使用  `ZOCFeedParserProtocol` 这个 protocol (在 ZOCFeedParserProtocol.h 文件里面，同时文件里也有 `ZOCFeedParserDelegate` )
 

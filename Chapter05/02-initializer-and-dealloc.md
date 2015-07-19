@@ -27,6 +27,7 @@
 
 
 `alloc` 方法会返回一个合法的没有初始化的实例对象。每一个发送到实例的信息会被翻译为名字是 `self` 的 `alloc` 返回的指针的参数返回的 `objc_msgSend()` 的调用。这样之后 `self` 已经可以执行所有方法了。
+
 为了完成两步创建，第一个发送给新创建的实例的方法应该是约定俗成的 `init` 方法。注意 `NSObject` 的 `init` 实现中，仅仅是返回了 `self`。
 
 
@@ -84,6 +85,7 @@ designated 初始化方法是提供所有的参数，secondary 初始化方法�
 
 
 在类继承中调用任何 designated 初始化方法都是合法的，而且应该保证 *所有的* designated initializer 在类继承中是是从祖先（通常是  `NSObject`）到你的类向下调用的。
+
 实际上这意味着第一个执行的初始化代码是最远的祖先，然后从顶向下的类继承，所有类都有机会执行他们特定的初始化代码。这样，你在你做你的特定的初始化工作前，所有你从超类继承的东西是不可用的状态。即使它的状态不明确，所有 Apple 的框架的 Framework 是保证遵守这个约定的，而且你的类也应该这样做。
 
 
@@ -152,15 +154,10 @@ In case you want to provide your own designated initializer there are three step
 @end
 ```
 
-In case you don't override `initWithNibName:bundle:` and the caller decides to initialize you class with this method (that would be a perfectly valid option) the method `initWithNews:` will never get called and this will bring to an incorrect initialization sequence where the specific initialization logic of your class is not executed.
-
 你没重载 `initWithNibName:bundle:` 而且调用者决定用这个方法初始化你的类(这是完全合法的)。 `initWithNews:` 永远不会被调用，所以导致了不正确的初始化流程，你的类特定的初始化逻辑没有被执行。
 
-Even though it should be possible to infer what method is the designate initializer, it is always good to be clear and explicit (the future you or other developers that will work on your code will thank you). There are two strategies (non mutually exclusive) that you can decide to use: the first one you is to clearly state in the documentation which initializer is the designated one, but better yet you can be nice with your compiler and by using the compiler directive `__attribute__((objc_designated_initializer))` you can signal your intent.
-
-
-
 即使可以推断那个方法是 designate initializer它，但是最好清晰地明确（未来的你或者其他开发者在改代码的时候会感谢你的）。你应该考虑来用这两个策略（不是互斥的）：第一个是你在文档中明确哪一个初始化方法是 designated 的，但是最好你可以用编译器的指令 `__attribute__((objc_designated_initializer))`  来标记你的意图。
+
 用这个编译指令的时候，编译器回来帮你。如果你的新的 designate initializer 没有调用你超类的 designated initializer，上编译器会发出警告。
 然而，当没有调用类的  designated initializer 的时候（并且依次提供必要的参数），并且调用其他父类中的 designated initialize 的时候，会变成一个不可用的状态。参考之前的例子，当实例化一个 `ZOCNewsViewController`  展示一个新闻而那条新闻没有展示的话，就会毫无意义。这个情况下你应该只需要让其他的 designated initializer 失效，来强制调用一个非常特别的 designated initializer。通过使用另外一个编译器指令  `__attribute__((unavailable("Invoke the designated initializer"))) ` 来修饰一个方法，通过这个属性，会让你在试图调用这个方法的时候产生一个编译错误。
 
@@ -178,33 +175,23 @@ Even though it should be possible to infer what method is the designate initiali
 
 ```
 
-A corollary of what described above is that you should never call a secondary initializer from within the designated one (if the secondary initializer respects the contract, it will call the designated one). Doing so, the call is very likely to invoke one of the subclass's overridden init methods and it will result in infinite recursion.
-
 上述的一个推论是：你应该永远不从 designated initializer 里面调用一个 secondary initializer （如果secondary initializer 遵守约定，它会调用 designated initializer）。如果这样，调用很可能会调用一个子类重写的 init 方法并且陷入无限递归之中。
-
-There is however an exception to all the rules laid out before that is whether an object conforms to the `NSCoding` protocol and it is initialized through the method `initWithCoder:`.
-We should distinguish between the case where the superclass is adopting `NSCoding` and when not. 
-In the former case, if you just call `[super initWithCoder:]` you will probably have some shared initialization code with the designated initializer. A good way to handle this is to extract this code in a private method (i.e.  `p_commonInit`).
-When your superclass does not adopt `NSCoding` the recommendation is to threat `initWithCoder:` as a secondary initializer and therefore call the `self` designated initializer. Note that this is against what suggested by Apple in the [Archives and Serializations Programming Guide](https://developer.apple.com/library/mac/documentation/cocoa/Conceptual/Archiving/Articles/codingobjects.html#//apple_ref/doc/uid/20000948-BCIHBJDE) where is stated:
 
 然而一个意外是一个对象是否遵守 `NSCoding` 协议，并且它通过方法 `initWithCoder:` 初始化。
 我们应该区别超类是否符合 `NSCoding` 的情况。
+
 如果符合，如果你只是调用 `[super initWithCoder:]` 你会可能有一个共享的初始化代码在 designated initializer 里面，一个好的方法是吧这些代码放在私有方法里面(比如  `p_commonInit` )。
+
 当你的超类不符合`NSCoding` 协议的时候，推荐把 `initWithCoder:` 作为 secondary initializer 来对待，并且调用 `self` 的 designated initializer。 注意这是违反 Apple 的 [Archives and Serializations Programming Guide](https://developer.apple.com/library/mac/documentation/cocoa/Conceptual/Archiving/Articles/codingobjects.html#//apple_ref/doc/uid/20000948-BCIHBJDE)  上面写的：
 
-
 > the object should first invoke its superclass's designated initializer to initialize inherited state （对象总是应该首先调用超类的 designated initializer  来初始化继承的状态）
-
 
 如果你的类不是  `NSObject` 的直接子类，这样做的话，会导致不可预测的行为。
 
 ####  Secondary Initializer 
 
-As stated in the previous paragraph, a secondary initializer is a sort of convenience method to provide default values / behaviors to the designated initializer.
-That said, it seems clear that you should not do any mandatory initialization in such method and you should never assume that this method will gets called. Again, the only methods that we are guaranteed to get called are the designated initializer.
-This imply that in your designated initializer you should always call another secondary initializer or your `self` designated initializer.  Sometimes, by mistake, one can type `super`; doing this will cause not to respect the aforementioned sequence of initialization (in this specific case by skipping the initialization of the current class).
-
 正如之前的描述么，secondary initializer 是一种方便提供默认值、行为到 designated initializer 的 方法。也就是说，你不应该强制很多初始化操作在这样的方法里面，并且你应该一直假设这个方法不会得到调用。我们保证的是唯一被调用的方法是 designated initializer。
+
 这意味着你的 designated initializer 总是应该调用其他的 secondary initializer  或者你 `self` 的 designated initializer。有时候，因为错误，可能打成了  `super`，这样会导致不符合上面提及的初始化顺序（在这个特别的例子里面，是跳过当前类的初始化）
 
 ##### References 参考
@@ -214,13 +201,9 @@ This imply that in your designated initializer you should always call another se
 - https://developer.apple.com/library/ios/Documentation/General/Conceptual/DevPedia-CocoaCore/MultipleInitializers.html
 - https://blog.twitter.com/2014/how-to-objective-c-initializer-patterns
 
-
-
 ### instancetype 
 
-
 我们经常忽略 Cocoa 充满了约定，并且这些约定可以帮助编译器变得更加聪明。无论编译器是否遭遇 `alloc` 或者 `init` 方法，他会知道，即使返回类型都是 `id` ，这些方法总是返回接受到的类类型的实例。因此，它允许编译器进行类型检查。（比如，检查方法返回的类型是否合法）。Clang的这个好处来自于 [related result type](http://clang.llvm.org/docs/LanguageExtensions.html#related-result-types)， 意味着：
-
 
 > messages sent to one of alloc and init methods will have the same static type as the instance of the receiver class （发送到 alloc 或者 init 方法的消息会有同样的静态类型检查是否为接受类的实例。）
 
@@ -240,6 +223,7 @@ This imply that in your designated initializer you should always call another se
 
 
 在你的 API 中要构成习惯以及保持始终如一的，此外，通过对你代码的小调整你可以提高可读性：在简单的浏览的时候你可以区分哪些方法是返回你类的实例的。你以后会感谢这些注意过的小细节的。
+
 ##### 参考
 - http://tewha.net/2013/02/why-you-should-use-instancetype-instead-of-id/
 - http://tewha.net/2013/01/when-is-id-promoted-to-instancetype/
@@ -258,41 +242,22 @@ This imply that in your designated initializer you should always call another se
 
 如果这个描述听起来很熟悉，说明你的直觉是对的。 Class cluster 是 Apple 对[抽象工厂](http://en.wikipedia.org/wiki/Abstract_factory_pattern)设计模式的称呼。
 
-
-
 class cluster 的想法很简单，你经常有一个抽象类在初始化期间处理信息，经常作为一个构造器里面的参数或者环境中读取，来完成特定的逻辑并且实例化子类。这个"public facing" 应该知晓它的子类而且返回适合的私有子类。
-
-
 
 这个模式非常有用，因为它减少了构造器调用中的复杂性，只需要知道接口如何与对象通信，而不需要知道怎么实现。
 
-
 Class clusters 在 Apple 的Framework 中广泛使用：一些明显的例子比如  `NSNumber` 可以返回不同哦给你的子类，取决于 数字类型如何提供  (Integer, Float, etc...) 或者 `NSArray` 返回不同的最优存储策略的子类。
-
-
-The beauty of this pattern is that the caller can be completely unaware of the concrete subclass; in fact it can be used when designing a library to be able to swap the underlaying returned class without leaking any implementation detail as long as is respectful of the contract established in the abstract class.
 
 这个模式的精妙的地方在于，调用者可以完全不管子类，事实上，这可以用在设计一个库，可以用来交换实际的返回的类，而不用去管相关的细节，因为它们都遵从抽象超类的方法。
 
-
 我们的经验是使用类簇可以帮助移除很多条件语句。
 
-
-
-A typical example of this is when you have the same UIViewController subclass for both iPhone and iPad, but the behavior is slightly different depending on the the device.
-
-
 一个经典的例子是如果你有为 iPad 和 iPhone 写的一样的 UIViewController 子类，但是在不同的设备上有不同的行为。
-
-
-
 
 比较基础的实现是用条件语句检查设备，然后执行不同的逻辑。虽然刚开始可能不错，但是随着代码的增长，运行逻辑也会趋于复杂。
 一个更好的实现的设计是创建一个抽象而且宽泛的 view controller 来包含所有的共享逻辑，并且对于不同设备有两个特别的子例。
 
-
 通用的 view controller  会检查当前设备并且返回适当的子类。
-
 
 ```obj-c
 @implementation ZOCKintsugiPhotoViewController
@@ -316,19 +281,14 @@ A typical example of this is when you have the same UIViewController subclass fo
 @end
 ```
 
-The previous code example show how to create a class cluster. First of all the `[self isMemberOfClass:ZOCKintsugiPhotoViewController.class]` is done to prevent the necessity to override the init method in the subclass in order to prevent an infinite recursion. 
-When `[[ZOCKintsugiPhotoViewController alloc] initWithPhotos:photos]` will get called the previous check will be true, the `self = nil` is to remove every reference to the instance of `ZOCKintsugiPhotoViewController` that it will be deallocated , following there is the logic to choose which subclass should be initialized. 
-Let's assume that we are running this code on an iPhone and that `ZOCKintsugiPhotoViewController_iPhone` is not overriding `initWithPhotos:`; in this case, when executing `self = [[ZOCKintsugiPhotoViewController_iPhone alloc] initWithPhotos:photos];` the `ZOCKintsugiPhotoViewController` will be called and here is when the first check comes handy, given that now is not exactly  `ZOCKintsugiPhotoViewController` the check will be false calling the `return [super initWithNibName:nil bundle:nil];` this will make continue the initialization following the correct initialization path highlighted in the previous session.
-
 之前的代码的例子展示了如何创建一个类簇。首先，`[self isMemberOfClass:ZOCKintsugiPhotoViewController.class]`  来避免在子类中重载初始化方法，来避免无限的递归。当  `[[ZOCKintsugiPhotoViewController alloc] initWithPhotos:photos]` 得到调用的时候之前的检查会变成 true 的，`self = nil` 是用来移除所有到 `ZOCKintsugiPhotoViewController` 实例的引用的，它会被释放，按照这个逻辑来检查哪个类应该被初始化。
-让我们假设在 iPhone 上运行了这个代码， `ZOCKintsugiPhotoViewController_iPhone` 没有重载`initWithPhotos:`，在这个情况下，当执行 `self = [[ZOCKintsugiPhotoViewController_iPhone alloc] initWithPhotos:photos];` 的时候，`ZOCKintsugiPhotoViewController`  会被调用，并且当第一次检查的时候，这样不会让 `ZOCKintsugiPhotoViewController`  检查会变成 false 调用`return [super initWithNibName:nil bundle:nil];` ，这会让 继续初始化执行正确的初始化之前的会话。
 
+让我们假设在 iPhone 上运行了这个代码， `ZOCKintsugiPhotoViewController_iPhone` 没有重载`initWithPhotos:`，在这个情况下，当执行 `self = [[ZOCKintsugiPhotoViewController_iPhone alloc] initWithPhotos:photos];` 的时候，`ZOCKintsugiPhotoViewController`  会被调用，并且当第一次检查的时候，这样不会让 `ZOCKintsugiPhotoViewController`  检查会变成 false 调用`return [super initWithNibName:nil bundle:nil];` ，这会让 继续初始化执行正确的初始化之前的会话。
 
 ####   单例
 
 如果可能，请尽量避免使用单例而是依赖注入。
 然而，如果一定要用，请使用一个线程安全的模式来创建共享的实例。 对于GCD，用 `dispatch_once()` 函数就可以咯。
-
 
 ```obj-c
 + (instancetype)sharedInstance
@@ -342,9 +302,7 @@ Let's assume that we are running this code on an iPhone and that `ZOCKintsugiPho
 }
 ```
 
-
 使用dispatch_once()，来控制代码同步，取代了原来老的约定俗成的用法。
-
 
 ```obj-c
 + (instancetype)sharedInstance
@@ -359,13 +317,9 @@ Let's assume that we are running this code on an iPhone and that `ZOCKintsugiPho
 }
 ```
 
-
  `dispatch_once()`  的优点是，它更快，而且语法上更干净，因为dispatch_once()的意思就是 ”把一些东西执行一次“，就像我们做的一样。 这样同时可以避免[possible and sometimes prolific crashes][singleton_cocoasamurai].
 
-Classic examples of acceptable singleton objects are the GPS and the accelerometer of a device. Even though Singleton objects can be subclassed, the cases where this comes useful are rare. The interface should put in evidence that the given class is intended to be used as a Singleton. Therefore, often a single public `sharedInstance` class method would suffice and no writable properties should be exposed.
-
 经典的可以接受的单例对象的例子是一个设备的 GPS 以及 动作传感器。即使单例对象可以被子类化，这个情况可以十分有用。这个接口应该证明给出的类是趋向于使用单例的。然而，经常使用一个单独的公开的 `sharedInstance` 类方法就够了，并且不可写的属性也应该被暴露。
-
 
 把单例作为一个对象的容器来在代码或者应用层面上共享是糟糕和丑陋的，这是一个不好的设计。
 
