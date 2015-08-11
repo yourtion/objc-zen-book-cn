@@ -1,6 +1,5 @@
 ## 委托和数据源
 
-
 委托是 Apple 的框架里面使用广泛的模式，同时它是一个重要的 四人帮的书“设计模式”中的模式。委托模式是单向的，消息的发送方（委托方）需要知道接收方（委托），反过来就不是了。对象之间没有多少耦合，因为发送方只要知道它的委托实现了对应的 protocol。
 
 本质上，委托模式只需要委托提供一些回调方法，就是说委托实现了一系列空返回值的方法。
@@ -62,7 +61,6 @@
 
 ```
 
-
 在上面的例子里面，委托方法需要总是有一个调用方作为第一个参数，否则委托对象可能被不能区别不同的委托者的实例。此外，如果调用者没有被传递到委托对象，那么就没有办法让一个委托对象处理两个不同的委托者了。所以，下面这样的方法就是人神共愤的：
 
 
@@ -71,7 +69,6 @@
 ```
 
 默认情况下，委托对象需要实现 protocol 的方法。可以用`@required` 和  `@optional` 关键字来标记方法是否是必要的还是可选的。
-
 
 ```obj-c
 @protocol ZOCSignUpViewControllerDelegate <NSObject>
@@ -82,7 +79,7 @@
 @end
 ```
 
-对于可选的方法，委托者必须在发送消息前检查委托是否确实实现了特定的方法（否则会Crash）：
+对于可选的方法，委托者必须在发送消息前检查委托是否确实实现了特定的方法（否则会 crash）：
 
 ```obj-c
 if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSignUpButton:)]) {
@@ -90,8 +87,7 @@ if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSign
 }
 ```
 
-###   继承
-
+### 继承
 
 有时候你可能需要重载委托方法。考虑有两个 UIViewController 子类的情况：UIViewControllerA 和 UIViewControllerB，有下面的类继承关系。
 
@@ -117,14 +113,13 @@ if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSign
 
 但是如果超类(`UIViewControllerA`)没有实现这个方法呢？
 
-
 调用过程
 
 ```obj-c
 [super respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]
 ```
 
-会用 NSObject 的实现，寻找，在 `self` 的上下文中无疑有它的实现，但是 app 会在下一行 Crash 并且报下面的错：
+会用 NSObject 的实现，寻找，在 `self` 的上下文中无疑有它的实现，但是 App 会在下一行 crash 并且报下面的错：
 
 ```
 *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[UIViewControllerB tableView:heightForRowAtIndexPath:]: unrecognized selector sent to instance 0x8d82820'
@@ -238,7 +233,7 @@ if ([self.delegate respondsToSelector:@selector(signUpViewControllerDidPressSign
 @property (nonatomic, strong) NSMutableSet *delegates;
 @end
 ```
--------------------
+
 ```obj-c
 @implementation ZOCGeneralService
 - (void)registerDelegate:(id<ZOCServiceDelegate>)delegate {

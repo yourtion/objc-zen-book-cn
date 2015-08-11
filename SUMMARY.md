@@ -31,7 +31,7 @@
   * [字符串文档](./Chapter10/05-docstrings.md)
   * [注释](./Chapter10/06-comments.md)
 * [对象间的通讯](./Chapter11/01-inter-object-communication.md)
-  * [Block](./Chapter11/02-blocks.md)
+  * [Blocks](./Chapter11/02-blocks.md)
   * [委托和数据源](./Chapter11/03-delegate-and-datasource.md)
 * [面向切面编程](./Chapter12/01-aspect-oriented-programming.md)
 * [参考资料](./Chapter13/01-references.md)
