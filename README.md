@@ -45,6 +45,10 @@ https://github.com/oa414/objc-zen-book-cn/
 - bopang@sohu-inc.com
 - https://github.com/heistings
 
+**Kevin.Xiao**
+- kevinxiao1919@gmail.com
+- https://github.com/KevinHM
+
 翻译已得到原作者许可，并且会在更加完善后申请合并到原文仓库。
 
 ## GitBook 排版
