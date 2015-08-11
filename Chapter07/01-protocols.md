@@ -1,16 +1,16 @@
 #  Protocols
 
-在 Objective-C 的世界里面经常错过的一个东西是抽象接口。接口（interface）这个词通常指一个类的 `.h` 文件，但是它在 Java 程序员眼里有另外的含义： 一系列不依赖具体实现的方法的定义。
+在 Objective-C 的世界里面经常错过的一个东西是抽象接口。接口（interface）这个词通常指一个类的 `.h` 文件，但是它在 Java 程序员眼里有另外的含义： 一系列不依赖具体实现的方法的定义。(译者注：在 Objective-C 中，类的接口对应在.m文件中都会有具体的实现，但 Java 中接口更接近于 Objective-C 中的抽象接口, 或者说是协议(protocol))
 
-在 Objective-C 里是通过 protocol 来实现抽象接口的。因为历史原因，protocol （作为 Java 接口使用）并没有在 Objective-C 社区里面广泛使用。一个主要原因是大多数的 Apple 开发的代码没有包含它，而几乎所有的开发者都是遵从 Apple 的模式以及指南的。Apple 几乎只是在委托模式下使用 protocol。
+在 Objective-C 里是通过 protocol 来实现抽象接口的。因为历史原因，protocol （使用方法类似 Java 的接口）并没有大量地在 Objective-C的代码中使用也没有在社区中普及(指的是那种像 Java 程序员使用接口那样来使用 protocol 的方式)。一个主要原因是大多数的 Apple 开发的代码没有采用这种的方式，而几乎所有的开发者都是遵从 Apple 的模式以及指南。Apple 几乎只是在委托模式下使用 protocol。
 
-但是抽象接口的概念很强大，它计算机科学的历史中就有起源，没有理由不在 Objective-C 中使用。
+但是抽象接口的概念很强大，在计算机科学的历史中颇有渊源，没有理由不在 Objective-C 中使用。
 
-我们会解释 protocol 的强大力量（用作抽象接口），用具体的例子来解释：把非常糟糕的设计的架构改造为一个良好的可复用的代码。
+这里通过一个具体的例子来解释 protocol 的强大力量（用作抽象接口）：把非常糟糕的设计的架构改造为一个良好的可复用的代码。
 
-这个例子是在实现一个 RSS 订阅的阅读器（它可是经常在技术面试中作为一个测试题呢）。
+这个例子是在实现一个 RSS 阅读器（它可是经常在技术面试中作为一个测试题呢）。
 
-要求很简单明了：把一个远程的 RSS 订阅展示在一个 tableview 中。
+要求很简单：在 TableView 中展示一个远程的 RSS 订阅。
 
 一个幼稚的方法是创建一个 `UITableViewController` 的子类，并且把所有的检索订阅数据，解析以及展示的逻辑放在一起，或者说是一个 MVC (Massive View Controller)。这可以跑起来，但是它的设计非常糟糕，不过它足够过一些要求不高的面试了。
 
@@ -18,7 +18,6 @@
 
 - 一个 feed 解析器来解析搜集到的结果
 - 一个 feed 阅读器来显示结果
-
 
 这些类的接口可以是这样的：
 
@@ -48,9 +47,7 @@
 
 ```
 
-
-`ZOCFeedParser` 用一个 `NSURL` 来初始化来获取 RSS 订阅（在这之下可能会使用 NSXMLParser 和 NSXMLParserDelegate 创建有意义的数据），`ZOCTableViewController` 会用这个 parser 来进行初始化。 我们希望它显示 parser 接受到的指并且我们用下面的 protocol 实现委托：
-
+`ZOCFeedParser` 用 `NSURL` 进行初始化，来获取 RSS 订阅（在这之下可能会使用 NSXMLParser 和 NSXMLParserDelegate 创建有意义的数据），`ZOCTableViewController` 会用这个 parser 来进行初始化。 我们希望它显示 parser 接受到的值并且我们用下面的 protocol 实现委托：
 
 ```obj-c
 
@@ -65,13 +62,11 @@
 
 ```
 
-
-用合适的 protocol 来来处理 RSS 非常完美。view controller 会遵从它的公开的接口：
+我要说，这是一个处理 RSS 业务的完全合理而恰当的 protocol。这个 view controller 在 public 接口中将遵循这个 protocol：
 
 ```obj-c
 @interface ZOCTableViewController : UITableViewController <ZOCFeedParserDelegate>
 ```
-
 
 最后创建的代码是这样子的：
 
@@ -86,10 +81,9 @@ feedParser.delegate = tableViewController;
 
 到目前你可能觉得你的代码还是不错的，但是有多少代码是可以有效复用的呢？view controller 只能处理 `ZOCFeedParser` 类型的对象： 从这点来看我们只是把代码分离成了两个组成部分，而没有做任何其他有价值的事情。
 
+view controller 的职责应该是“显示某些东西提供的内容”，但是如果我们只允许传递`ZOCFeedParser`的话，就不是这样的了。这就体现了需要传递给 view controller 一个更泛型的对象的需求。
 
-view controller 的职责应该是“从<someone>上显示一些内容”，但是如果我们只允许传递`ZOCFeedParser`的话就不是这样的了。这就表现了需要传递给 View controller 一个更泛型的对象的需求。
-
-我们使用  `ZOCFeedParserProtocol` 这个 protocol (在 ZOCFeedParserProtocol.h 文件里面，同时文件里也有 `ZOCFeedParserDelegate` )
+我们使用  `ZOCFeedParserProtocol` 这个 protocol (在 ZOCFeedParserProtocol.h 文件里面，同时文件里也有 `ZOCFeedParserDelegate` )。
 
 ```obj-c
 
@@ -114,8 +108,7 @@ view controller 的职责应该是“从<someone>上显示一些内容”，但�
 
 ```
 
-
-注意这个代理 protocol 现在处理响应我们新的 protocol 而且 ZOCFeedParser 的接口文件更加精炼了：
+注意这个代理 protocol 现在处理响应我们新的 protocol， 而且 ZOCFeedParser 的接口文件更加精炼了：
 
 ```obj-c
 
@@ -127,10 +120,9 @@ view controller 的职责应该是“从<someone>上显示一些内容”，但�
 
 ```
 
+因为 `ZOCFeedParser` 实现了 `ZOCFeedParserProtocol`，它需要实现所有的`required`方法。
 
-因为 `ZOCFeedParser` 实现了 `ZOCFeedParserProtocol`，它需要实现所有需要的方法。
-从这点来看 view controller  可以接受任何实现这个新的  protocol 的对象，确保所有的对象会响应从 `start` 和 `stop` 的方法，而且它会通过 delegate 的属性来提供信息。所有的 view controller  只需要知道相关对象并且不需要知道实现的细节。
-
+从这点来看 view controller 能接受任何遵循该协议的对象，只要确保所有的对象都会响应`start`和`stop`方法并通过`delegate`属性提供信息(译者注：因为 protocol 默认情况下所有的方法定义都是`required`的)。对指定的对象而言，这就是 view controller 所要知道的一切,且不需要知道其实现的细节。
 
 ```obj-c
 
@@ -142,19 +134,17 @@ view controller 的职责应该是“从<someone>上显示一些内容”，但�
 
 ```
 
-上面的代码片段的改变看起来不多，但是有了一个巨大的提升。view controller 是面向一个协议而不是具体的实现的。这带来了以下的优点：
+上面的代码片段的改变看起来不多，但是有了一个巨大的提升。view controller 将基于协议而不是具体的实现来工作。这带来了以下的优点：
 
-- view controller 可以通过 delegate 属性带来的信息的任意对象，可以是  RSS 远程解析器，或者本地解析器，或是一个读取其他远程或者本地数据的服务
+- view controller 现在可以接收通过`delegate`属性提供信息的任意对象：可以是  RSS 远程解析器，或者本地解析器，或是一个读取其他远程或者本地数据的服务
 - `ZOCFeedParser` 和 `ZOCFeedParserDelegate` 可以被其他组成部分复用
 - `ZOCViewController` （UI逻辑部分）可以被复用
 - 测试更简单了，因为可以用 mock 对象来达到 protocol 预期的效果
 
-当实现一个 protocol 你总应该坚持 [里氏替换原则](http://en.wikipedia.org/wiki/Liskov_substitution_principle)。这个原则让你应该取代任意接口（也就是Objective-C里的的"protocol"）实现，而不用改变客户端或者相关实现。
+当实现一个 protocol 你总应该坚持 [里氏替换原则](http://en.wikipedia.org/wiki/Liskov_substitution_principle)。这个原则是：你应该可以取代任意接口（也就是Objective-C里的的"protocol"）实现，而不用改变客户端或者相关实现。
 
-此外这也意味着你的 protocol 不应该关注实现类的细节，更加认真地设计你的  protocol  的抽象表述的时候，需要注意它和底层实现是不相干的，协议是暴露给使用者的抽象概念。
+此外，这也意味着`protocol`不该关心类的实现细节；设计protocol的抽象表述时应非常用心，并且要牢记它和它背后的实现是不相干的，真正重要的是协议（这个暴露给使用者的抽象表述）。
 
-任何可以在未来复用的设计意味着可以提高代码质量，同时也是程序员的目标。是否这样设计代码，就是大师和菜鸟的区别。
+任何在未来可复用的设计，无形当中可以提高代码质量，这也应该一直是程序员的追求。是否这样设计代码，就是大师和菜鸟的区别。
 
-最后的代码可以在这找到。[here](http://github.com/albertodebortoli/ADBFeedReader).
-
-
+最后的代码可以在[这里](http://github.com/albertodebortoli/ADBFeedReader) 找到。
