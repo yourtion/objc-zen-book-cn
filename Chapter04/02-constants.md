@@ -21,7 +21,6 @@ static const CGFloat ZOCImageThumbnailHeight = 50.0f;
 ```
 
 **不推荐:**
-
 ```obj-c
 #define CompanyName @"Apple Inc."
 #define magicNumber 42
