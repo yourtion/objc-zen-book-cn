@@ -23,7 +23,7 @@ switch (condition) {
 ```
 
 
-有时候可以使用 fall-through 在不同的 case 里面执行一样的代码。一个 fall-through  是指移除 case 语句的 “break” 然后让下面的 case 继续执行。
+有时候可以使用 fall-through 在不同的 case 里面执行同一段代码。一个 fall-through  是指移除 case 语句的 “break” 然后让下面的 case 继续执行。
 
 ```obj-c
 switch (condition) {
@@ -57,14 +57,14 @@ switch (menuType) {
 
 此外，为了避免使用默认的 case，如果新的值加入到 enum，程序员会马上收到一个 warning 通知
 
-`Enumeration value 'ZOCEnumValue3' not handled in switch.`
+`Enumeration value 'ZOCEnumValue3' not handled in switch.（枚举类型 'ZOCEnumValue3' 没有被 switch 处理）`
 
-### Enumerated Types 枚举类型
+### 枚举类型
 
 
 当使用 `enum` 的时候，建议使用新的固定的基础类型定义，因它有更强大的的类型检查和代码补全。 SDK 现在有一个 宏来鼓励和促进使用固定类型定义 - `NS_ENUM()`
 
-*例子:**
+**例子:**
 
 ```obj-c
 typedef NS_ENUM(NSUInteger, ZOCMachineState) {
