@@ -57,7 +57,7 @@ Block 是 Objective-C 版本的 lambda 或者 closure（闭包）。
 
 当一个 block 被复制后，`__block` 声明的栈变量的引用被复制到了堆里，复制完成之后，无论是栈上的block还是刚刚产生在堆上的block(栈上block的副本)都会引用该变量在堆上的副本。
 
-译者加
+(下面代码是译者加的)
 
 ```obj-c
    ...
